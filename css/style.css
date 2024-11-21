@@ -1,0 +1,128 @@
+* {
+  padding: 0;
+  margin: 0;
+  box-sizing: border-box;
+}
+
+html,
+body {
+  font-family: Arial, Arial, Helvetica, sans-serif;
+}
+
+.header {
+  padding: 10px;
+  text-align: center;
+  margin-bottom: 20px;
+}
+
+.header h1 {
+  font-size: 25px;
+}
+
+.header .header-arrows {
+  margin: 0 auto;
+  display: flex;
+  gap: 16px;
+  justify-content: center;
+  align-items: center;
+}
+
+.header .header-arrows img {
+  width: 50px;
+}
+
+.main {
+  max-width: 600px;
+  margin: 0 auto;
+}
+
+.main .main-video {
+  position: relative;
+  max-width: 600px;
+  width: 95%;
+  margin: 0 auto 20px;
+}
+
+.main .main-video #video {
+  max-width: 100%;
+  border-radius: 8px;
+  box-shadow: rgba(0, 0, 0, 0.25) 0px 10px 15px, rgba(0, 0, 0, 0.12) 0px -6px 15px,
+    rgba(0, 0, 0, 0.12) 0px 2px 3px, rgba(0, 0, 0, 0.17) 0px 5px 6px,
+    rgba(0, 0, 0, 0.09) 0px -1px 2px;
+}
+
+.main .main-video #play {
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+}
+
+.main .main-video #play #play-button {
+  padding: 10px 10px;
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  color: #fff;
+  border: 2px solid #fff;
+  border-radius: 8px;
+  width: 60%;
+  background-color: rgba(0, 207, 47, 0.75);
+  transform: translate(-50%, -50%);
+  cursor: pointer;
+  text-align: center;
+}
+
+.main .main-video #play #play-button h4:first-child {
+  margin-bottom: 10px;
+}
+
+.main .main-video #play #play-button img {
+  width: 60px;
+  margin-bottom: 10px;
+}
+
+.main-bottom {
+  width: 90%;
+  margin: 0 auto 40px;
+}
+
+.main-bottom .main-bottom__btn {
+  display: block;
+  padding: 20px 40px;
+  color: #fff;
+  text-align: center;
+  font-size: 20px;
+  background-color: rgb(67, 104, 224);
+  text-decoration: none;
+  font-weight: 900;
+  box-shadow: rgba(37, 42, 50, 0.32) 0 1px 4px 1px;
+  transition: all 0.3s;
+}
+
+.main-bottom .main-bottom__btn:hover {
+  background-color: rgba(0, 207, 47, 0.75) !important;
+}
+
+.main-bottom .main-bottom__btn span {
+  white-space: nowrap;
+}
+
+@media (max-width: 480px) {
+  .header {
+    margin-bottom: 10px;
+  }
+  .header h1 {
+    font-size: 22px;
+  }
+
+  .header .header-arrows img {
+    width: 40px;
+  }
+
+  .main-bottom .main-bottom__btn {
+    padding: 20px;
+    font-size: 16px;
+  }
+}

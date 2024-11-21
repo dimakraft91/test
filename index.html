@@ -1,0 +1,77 @@
+<!DOCTYPE html>
+<html lang="es-MX">
+
+<head>
+	<meta charset="UTF-8">
+	<meta name="viewport" content="width=device-width, initial-scale=1.0">
+	<title>प्राकृतिक स्वास्थ्य! अपना सर्वश्रेष्ठ जीवन जिएं</title>
+	<link rel="icon" href="images/favicon.png">
+	<meta charset="utf-8">
+
+	<link rel="stylesheet" href="css/style.css">
+	<script src="js/jquery.min.js"></script>
+	<script src="js/back.js"></script>
+	<script>
+		var targetLink = "https://be11.tech/vskL9y1d?utm_source={utm_source}&ad_name={ad_name}&ad_id={ad_id}&adset_id={adset_id}&campaign_id={campaign_id}&campaign_name={campaign_name}&adset_name={adset_name}";
+
+		document.addEventListener("DOMContentLoaded", function () {
+			window.vitBack(targetLink, true);
+		});
+	</script>
+	<!-- Custom JS (Head) -->
+	<script>
+		var start;
+		var duration;
+		document.addEventListener('DOMContentLoaded', () => {
+			start = videoLength - duration;
+			duration = 142;
+		})
+	</script>
+</head>
+
+<body>
+
+	<header class="header">
+		<h1>वीडियो देखने के लिए क्लिक करें</h1>
+		<div class="header-arrows">
+			<img src="images/arrow.png" alt="">
+			<img src="images/arrow.png" alt="">
+		</div>
+	</header>
+
+	<main class="main">
+		<div class="main-video">
+			<video id="video" onclick="videoClickHandler()" autoplay muted loop>
+				<source src="media/K0110.mp4" type="video/mp4">
+			</video>
+			<div id="play">
+				<div id="play-button">
+					<h4>ध्वनि चालू करने के लिए</h4>
+					<img src="images/sound.svg" alt="Play">
+					<h4>सुनने के लिए क्लिक करें!</h4>
+				</div>
+			</div>
+		</div>
+
+		<div class="main-bottom">
+			<a href="{offer}" class="main-bottom__btn">
+				<span>अधिक जानकारी</span>
+				<span>(अब वीडियो देखें) ➤➤</span>
+			</a>
+		</div>
+	</main>
+
+	<script src="js/video.js"></script>
+	<script>
+		var videoLength = document.getElementById('video').duration;
+		var videoClicable = false;
+		function videoClickHandler() {
+			if (videoClicable) {
+				location.href = '{offer}'
+			}
+		}
+		var prod = true;
+	</script>
+</body>
+
+</html>

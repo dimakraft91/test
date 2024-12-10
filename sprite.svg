@@ -1,26 +1,5 @@
-<!DOCTYPE html>
-<html lang="EN">
-    <head>
-        <meta charset="UTF-8"/>
-        <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
-        <link rel="preconnect" href="https://fonts.googleapis.com"/>
-        <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin/>
-        <link href="https://fonts.googleapis.com/css2?family=Montserrat:ital,wght@0,100..900;1,100..900&display=swap" rel="stylesheet"/>
-        <link rel="stylesheet" href="css/style.css"/>
-        <link rel="stylesheet" href="css/media.css"/>
-        <link rel="shortcut icon" href="img/main/favicon.ico" type="image/x-icon"/>
-        <script src="js/jquery-1.8.3.min.js"></script>
-        <title>Afflex</title>
-    </head>
 
-    <body>
-        
-                            <svg width="36" height="36">
-                                <use xlink:href="sprite.svg#transactions-icon1"></use>
-                            </svg>
-                        
-
-        <!-- <svg style="display: none;">
+    <svg xmlns="http://www.w3.org/2000/svg">
             <symbol id="transactions-icon1" viewBox="0 0 36 36">
                 <g>
                     <path
@@ -41,8 +20,7 @@
                    />
                 </g>
             </symbol>
-        </svg> -->
+        </svg>
 
-        
-    </body>
-</html>
+
+            

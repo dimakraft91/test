@@ -4469,7 +4469,8 @@ body[data-aos-easing=ease-in-out-quart] [data-aos] {
   left: 0px;
 }
 .timer {
-  width: 228px;
+  display: flex;
+  justify-content: center;
   font-family: 'PT Sans', sans-serif;
   font-size: 40px;
   font-weight: bold;

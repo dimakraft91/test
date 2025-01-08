@@ -4469,7 +4469,8 @@ body[data-aos-easing=ease-in-out-quart] [data-aos] {
   left: 0px;
 }
 .timer {
-  width: 228px;
+  display: flex;
+  justify-content: center;
   font-family: 'PT Sans', sans-serif;
   font-size: 40px;
   font-weight: bold;
@@ -4530,6 +4531,7 @@ body[data-aos-easing=ease-in-out-quart] [data-aos] {
   padding: 0 20px 0;
 }
 .order_form_input_name {
+  width: 265px!important;
   border-radius: 3px;
   border: 1px solid #7f7f7f;
   height: 39px;
@@ -4542,6 +4544,7 @@ body[data-aos-easing=ease-in-out-quart] [data-aos] {
   max-width: 100%;
 }
 .order_form_input_phone {
+  width: 265px!important;
   max-width: 100%;
   border-radius: 3px;
   border: 1px solid #7f7f7f;
@@ -4580,6 +4583,10 @@ body[data-aos-easing=ease-in-out-quart] [data-aos] {
 
 .face__body .form_block .face__price-ch {
   margin-top: 55px;
+}
+
+.iti {
+  width: unset!important;
 }
 
 @media screen and (max-width: 480px) {

@@ -42,7 +42,7 @@ curl_close($process);
 // Проверяем успешность выполнения запроса
 if ($return) {
     // Перенаправляем на success.php
-    header('Location: /thanks/thanks.php');
+    header('Location: thanks.php');
     exit(); // Завершаем выполнение скрипта
 } else {
     // Обработка ошибки (если нужно)

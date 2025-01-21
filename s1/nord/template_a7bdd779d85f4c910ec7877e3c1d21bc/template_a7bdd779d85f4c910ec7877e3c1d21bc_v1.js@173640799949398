@@ -1,0 +1,1482 @@
+
+; /* Start:"a:4:{s:4:"full";s:57:"/bitrix/templates/nord/js/svg4everybody.js?16431159831396";s:6:"source";s:42:"/bitrix/templates/nord/js/svg4everybody.js";s:3:"min";s:0:"";s:3:"map";s:0:"";}"*/
+!function(a,b){"function"==typeof define&&define.amd?define([],function(){return a.svg4everybody=b()}):"object"==typeof exports?module.exports=b():a.svg4everybody=b()}(this,function(){/*! svg4everybody v2.0.0 | github.com/jonathantneal/svg4everybody */
+    function a(a,b){if(b){var c=!a.getAttribute("viewBox")&&b.getAttribute("viewBox"),d=document.createDocumentFragment(),e=b.cloneNode(!0);for(c&&a.setAttribute("viewBox",c);e.childNodes.length;)d.appendChild(e.firstChild);a.appendChild(d)}}function b(b){b.onreadystatechange=function(){if(4===b.readyState){var c=document.createElement("x");c.innerHTML=b.responseText,b.s.splice(0).map(function(b){a(b[0],c.querySelector("#"+b[1].replace(/(\W)/g,"\\$1")))})}},b.onreadystatechange()}function c(c){function d(){for(var c;c=e[0];){var j=c.parentNode;if(j&&/svg/i.test(j.nodeName)){var k=c.getAttribute("xlink:href");if(f&&(!g||g(k,j,c))){var l=k.split("#"),m=l[0],n=l[1];if(j.removeChild(c),m.length){var o=i[m]=i[m]||new XMLHttpRequest;o.s||(o.s=[],o.open("GET",m),o.send()),o.s.push([j,n]),b(o)}else a(j,document.getElementById(n))}}}h(d,17)}c=c||{};var e=document.getElementsByTagName("use"),f="shim"in c?c.shim:/\bEdge\/12\b|\bTrident\/[567]\b|\bVersion\/7.0 Safari\b/.test(navigator.userAgent)||(navigator.userAgent.match(/AppleWebKit\/(\d+)/)||[])[1]<537,g=c.validate,h=window.requestAnimationFrame||setTimeout,i={};f&&d()}return c});
+
+/* End */
+;
+; /* Start:"a:4:{s:4:"full";s:53:"/bitrix/templates/nord/js/validate.js?164311598312244";s:6:"source";s:37:"/bitrix/templates/nord/js/validate.js";s:3:"min";s:0:"";s:3:"map";s:0:"";}"*/
+$.fn.formValidates = function () {
+    return this.each(function () {
+
+        /* Объявляем кнопки */
+        var $form = $(this),
+            $input = $form.find('input'),
+            $sInput = $form.find('input.subscribe__button'),
+            $submit = $form.find('input[type="submit"]'),
+            dNameForm = $form.attr('data-validate');
+
+
+        var validate = {
+            /* Объявляем константы */
+            init: {
+                $this: this,
+                lenPhone: '11',
+                minLenName: '2',
+                minLenNum: '1',
+                minLenText: '1',
+                minLenPassword: '5',
+                regExPhone: /[^0-9]/, // регэкс разрешенных цифр
+                regExEmail: /^[\w\.\d-_]+@[\w\.\d-_]+\.\w{2,8}$/i, // регэкс проверяем email по маске
+                regExText: /[^А-Яа-яA-Za-z]/, // регэкс разрешенных символов
+                regExTextNum: /[^А-Яа-яA-Za-z0-9]/, // регэкс разрешенных символов и букв
+                regExNum: /[^0-9]/, // регэкс разрешенных цифр
+                lang: 'ru', //Передаем язык
+                fPesonal: 'personal',
+                fRegister: 'registration'
+            },
+            action: function () {
+                /*Как будем проверять*/
+                var $this = this;
+
+                $submit.on('click', function (event) {
+                    var arrError = []; //Список полей с ошибками
+                    $input.each(function (i, element) {
+                        ($this.eachInput(element)) ? arrError.push($this.eachInput(element)) : false;
+                    });
+                    if (arrError.length > '1')
+                        event.preventDefault();
+                });
+
+                /*Специально для подписки*/
+                $sInput.on('click', function (event) {
+                    var arrError = []; //Список полей с ошибками
+                    $input.each(function (i, element) {
+                        ($this.eachInput(element)) ? arrError.push($this.eachInput(element)) : false;
+                    });
+                    (arrError.length >= '1') ? event.preventDefault() : ajax_email($input.val());
+                });
+
+                $input.each(function (i, element) {
+                    //console.log(i, element);
+
+                    if($(element).val().length != 0) {
+                        $(element).each(function() {
+                            $this.eachInput(element);
+                        });
+                    }
+
+                    $(element).on('change, keyup', function () {
+                        $this.eachInput(element);
+                    });
+                });
+            },
+            eachInput: function (element) {
+                var eName = $(element).attr('data-name'),
+                    eVal = $(element).val(), error;
+
+                switch (eName) {
+                    case 'number':
+                        if (eVal.length < 1) {
+                            this.print(element, 'required');
+                            error = this.addErrorClass(element);
+
+                        } else if (this.init.minLenNum > eVal.length) {
+                            this.print(element, 'lenNum');
+                            error = this.addErrorClass(element);
+
+                        } else if (this.init.regExNum.test(eVal)) {
+                            this.print(element, 'errorNum');
+                            error = this.addErrorClass(element);
+
+                        } else {
+                            this.addValidClass(element);
+                        }
+                        break;
+
+                    case 'text':
+                        if (eVal.length < 1) {
+                            this.print(element, 'required');
+                            error = this.addErrorClass(element);
+
+                        } else if (this.init.minLenText > eVal.length) {
+                            this.print(element, 'lenText');
+                            error = this.addErrorClass(element);
+
+                        } else if (this.init.regExText.test(eVal)) {
+                            this.print(element, 'errorText');
+                            error = this.addErrorClass(element);
+
+                        } else {
+                            this.addValidClass(element);
+                        }
+                        break;
+                    case 'text_and_number':
+                        if (eVal.length < 1) {
+                            this.print(element, 'required');
+                            error = this.addErrorClass(element);
+
+                        } else if (this.init.minLenText > eVal.length) {
+                            this.print(element, 'lenTextNum');
+                            error = this.addErrorClass(element);
+
+                        } else if (this.init.regExTextNum.test(eVal)) {
+                            this.print(element, 'errorTextNum');
+                            error = this.addErrorClass(element);
+
+                        } else {
+                            this.addValidClass(element);
+                        }
+                        break;
+
+                    case 'login':
+                        if (eVal.length < 1) {
+                            this.print(element, 'required');
+                            error = this.addErrorClass(element);
+                        } else if (this.init.minLenName > eVal.length) {
+                            this.print(element, 'lenName');
+                            error = this.addErrorClass(element);
+                        } else {
+                            this.addValidClass(element);
+                        }
+                        break;
+
+                    case 'name':
+
+                        if (eVal.length < 1) {
+                            this.print(element, 'required');
+                            error = this.addErrorClass(element);
+                        } else if (this.init.minLenName > eVal.length) {
+                            this.print(element, 'lenName');
+                            error = this.addErrorClass(element);
+                        } else if (this.init.regExText.test(eVal)) {
+                            this.print(element, 'errorName');
+                            error = this.addErrorClass(element);
+                        } else {
+                            this.addValidClass(element);
+                        }
+                        break;
+
+                    case 'phone':
+                        //eVal = eVal.replace(this.init.regExPhone, "");
+                        if (eVal.length < 1) {
+                            this.print(element, 'required');
+                            error = this.addErrorClass(element);
+                        } else if (this.init.lenPhone > eVal.length) {
+                            this.print(element, 'lenPhone');
+                            error = this.addErrorClass(element);
+                        } else if (this.init.lenPhone == eVal.length) {
+                            /*Дополнительная проверка на валидацию в личном кабинете*/
+                            var url = window.location.pathname;
+                            if(~url.indexOf('auth')){
+                                var UV = user_valid(eVal);
+                                if (UV == 'Y' && dNameForm == this.init.fPesonal || UV == 'Y' && dNameForm == this.init.fRegister) {
+                                    this.print(element, 'yesPhone');
+                                    error = this.addErrorClass(element);
+                                } else if (UV != 'Y' && dNameForm != this.init.fPesonal && dNameForm != this.init.fRegister) {
+                                    this.print(element, 'noPhone');
+                                    error = this.addErrorClass(element);
+                                } else {
+                                    this.addValidClass(element);
+                                }
+                            }else{
+                                this.addValidClass(element);
+                            }
+
+                        } else {
+                            this.addValidClass(element);
+                        }
+                        break;
+
+                    case 'email':
+                        if (eVal.length < 1) {
+                            this.print(element, 'required');
+                            error = this.addErrorClass(element);
+                        } else if (!this.init.regExEmail.test(eVal)) {
+                            this.print(element, 'regExEmail');
+                            error = this.addErrorClass(element);
+                        } else {
+                            this.addValidClass(element);
+                        }
+                        break;
+
+                    case 'password':
+
+                        /**
+                         * @todo переделать валидацию на что-то более адекватное
+                         */
+                        /*
+                         if (eVal.length < 1) {
+                         this.print(element, 'required');
+                         error = this.addErrorClass(element);
+                         } else if (this.init.minLenPassword >= eVal.length) {
+                         this.print(element, 'lenPasswords');
+                         error = this.addErrorClass(element);
+                         } else {
+                         this.addValidClass(element);
+                         }/* */
+
+                        this.addValidClass(element);
+                        break;
+
+                    default:
+                        break;
+                }
+                return error;
+            },
+            addValidClass: function (element) {
+                $(element).next().html("");
+                $(element).removeClass('error');
+                $(element).addClass('valid');
+            },
+            addErrorClass: function (element) {
+                $(element).removeClass('valid');
+                $(element).addClass('error');
+                return $(element).attr('data-name');
+            },
+            print: function (el, text) {
+                $(el).next().html(this.message[this.init.lang][text]);
+            },
+            /* Сообщения */
+            message: {
+                ru: {
+                    /*Text*/
+                    lenText: "Слишком мало символов",
+                    errorText: 'Ошибка при вводе, недопустимые символы',
+                    /*Text & num*/
+                    lenTextNum: "Слишком мало символов",
+                    errorTextNum: 'Ошибка при вводе, недопустимые символы',
+                    /*Name*/
+                    lenName: "Слишком мало символов",
+                    errorName: 'Ошибка при вводе, недопустимые символы',
+                    /*Phone*/
+                    lenPhone: "Не верный телефонный номер",
+                    noPhone: "Такой телефон отсутствует в базе",
+                    yesPhone: "Такой телефон уже зарегистрирован",
+                    /*Password*/
+                    lenPasswords: "Слишком мало символов",
+                    /*Email*/
+                    regExEmail: "Введите верный Email",
+                    /*any*/
+                    required: "Вы не заполнили обязательное поле"
+                },
+                en: {
+                }
+            }
+        };
+
+        validate.action();
+    });
+};
+/* End */
+;
+; /* Start:"a:4:{s:4:"full";s:57:"/bitrix/templates/nord/assets/js/script.js?16431159364761";s:6:"source";s:42:"/bitrix/templates/nord/assets/js/script.js";s:3:"min";s:0:"";s:3:"map";s:0:"";}"*/
+$(function() {
+	$('.publications-slider, .tarifs-slider').slick({
+		infinite: true,
+		slidesToShow: 3,
+		slidesToScroll: 1,
+		dots: false,
+		arrows: false,
+		adaptiveHeight: true,
+		responsive: [
+		{
+		  breakpoint: 991,
+		  settings: {
+			slidesToShow: 2,
+		  }
+		},
+		{
+		  breakpoint: 575,
+		  settings: {
+			slidesToShow: 1,
+		  }
+		}
+	  ]
+	});
+	$('.reviews-slider, .certificates-slider, .awards-slider').slick({
+		infinite: true,
+		slidesToShow: 5,
+		slidesToScroll: 1,
+		dots: false,
+		arrows: false,
+		adaptiveHeight: true,
+		responsive: [
+		{
+		  breakpoint: 991,
+		  settings: {
+			slidesToShow: 4,
+		  }
+		},
+			{
+		  breakpoint: 767,
+		  settings: {
+			slidesToShow: 3,
+		  }
+		},
+		{
+		  breakpoint: 575,
+		  settings: {
+			slidesToShow: 2,
+		  }
+		}
+	  ]
+	});
+	$('.clients-slider, .clients-list').slick({
+		infinite: true,
+		slidesToShow: 6,
+		slidesToScroll: 1,
+		dots: false,
+		arrows: false,
+		adaptiveHeight: true,
+		responsive: [
+		{
+		  breakpoint: 991,
+		  settings: {
+			slidesToShow: 4,
+		  }
+		},
+			{
+		  breakpoint: 767,
+		  settings: {
+			slidesToShow: 3,
+		  }
+		},
+		{
+		  breakpoint: 575,
+		  settings: {
+			slidesToShow: 2,
+		  }
+		}
+	  ]
+	});
+	
+	$('.smi-slider').slick({
+		infinite: true,
+		slidesToShow: 4,
+		slidesToScroll: 1,
+		dots: false,
+		arrows: false,
+		adaptiveHeight: true,
+		responsive: [
+		{
+		  breakpoint: 991,
+		  settings: {
+			slidesToShow: 3,
+		  }
+		},
+			{
+		  breakpoint: 767,
+		  settings: {
+			slidesToShow: 2,
+		  }
+		},
+		{
+		  breakpoint: 575,
+		  settings: {
+			slidesToShow: 1,
+		  }
+		}
+	  ]
+	});
+	
+	$('.reviews').slick({
+		infinite: true,
+		slidesToShow: 1,
+		slidesToScroll: 1,
+		dots: false,
+		arrows: false,
+		adaptiveHeight: true
+	});
+	
+	
+	$("ul.dropdown-menu [data-toggle='dropdown']").on("click", function(event) {
+		event.preventDefault();
+		event.stopPropagation();
+
+		// $(this).parent().parent().find('.dropdown-menu').removeClass("show");
+
+		if ($(this).next().hasClass('show')) {
+			$(this).parents('.dropdown-menu').first().find('.show').removeClass("show");
+			$(this).parent().parent().find('.dropdown-menu').removeClass("show");
+		} else {
+			$('.dropdown-submenu .dropdown-menu.show').removeClass("show");
+			$('.dropdown-submenu>a').removeClass("show");
+			$(this).siblings().addClass("show");
+		}
+		if (!$(this).next().hasClass('show')) {
+			$(this).parents('.dropdown-menu').first().find('.show').removeClass("show");
+		}
+		$(this).parents('li.nav-item.dropdown.show').on('hidden.bs.dropdown', function(e) {
+		  $('.dropdown-submenu .show').removeClass("show");
+		});
+
+	  });
+	
+	
+	$('#publicks .left').click(function(){
+		$('.publications-slider').slick('slickPrev');
+	});
+	$('#publicks .right').click(function(){
+		$('.publications-slider').slick('slickNext');
+	});
+	$('#reviews-slider .left').click(function(){
+		$('.reviews').slick('slickPrev');
+	});
+	$('#reviews-slider .right').click(function(){
+		$('.reviews').slick('slickNext');
+	});
+	$('#tarifs .left').click(function(){
+		$('.tarifs-slider').slick('slickPrev');
+	});
+	$('#tarifs .right').click(function(){
+		$('.tarifs-slider').slick('slickNext');
+	});
+	
+	$('#reviews .left').click(function(){
+		$('.reviews-slider').slick('slickPrev');
+	});
+	$('#reviews .right').click(function(){
+		$('.reviews-slider').slick('slickNext');
+	});
+	
+	$('#certificates .left').click(function(){
+		$('.certificates-slider').slick('slickPrev');
+	});
+	$('#certificates .right').click(function(){
+		$('.certificates-slider').slick('slickNext');
+	});
+
+	$('#awards .left').click(function(){
+		$('.awards-slider').slick('slickPrev');
+	});
+	$('#awards .right').click(function(){
+		$('.awards-slider').slick('slickNext');
+	});
+
+	$('#clients .left').click(function(){
+		$('.clients-slider').slick('slickPrev');
+	});
+	$('#clients .right').click(function(){
+		$('.clients-slider').slick('slickNext');
+	});
+	
+	$('.bars').click(function(){
+		$('#mainNav').toggleClass('active');
+	});
+	
+	$(document).mouseup(function (e){ // событие клика по веб-документу
+		var div = $("#mainNav"); // тут указываем ID элемента
+		if (!div.is(e.target) // если клик был не по нашему блоку
+		    && div.has(e.target).length === 0) { // и не по его дочерним элементам
+			$('#mainNav').removeClass('active');
+		}
+	});
+	
+	$(function($){
+		$('input[placeholder="Номер телефона"]').mask("(999) 999-99-99");
+		$('input[placeholder="(___) ___ - __ - __"]').mask("(999) 999-99-99");
+	});
+	$('[data-toggle="tooltip"]').tooltip();
+});
+$('.price-slider').on('change mousemove', function(){
+	var myRange = new Number($('#myRange').val());
+	$('#count').text(parseInt(myRange).toLocaleString('ru-RU'));
+	$('#total').text(parseInt(myRange * 3).toLocaleString('ru-RU'));
+});
+
+
+
+/* End */
+;
+; /* Start:"a:4:{s:4:"full";s:52:"/bitrix/templates/nord/js/scripts.js?171310897629934";s:6:"source";s:36:"/bitrix/templates/nord/js/scripts.js";s:3:"min";s:0:"";s:3:"map";s:0:"";}"*/
+$(document).ready(function () {
+
+    /* поддержка SVG в IE */
+    svg4everybody();
+
+    $('[data-validate="calculator"]').formValidates();
+    $('[data-validate="form"]').formValidates();
+
+    var win = $(window),
+            winWidth = win.width(),
+            winHeight = win.height(),
+            docHeight = $(document).height(),
+            intro = $('.intro'),
+            recent = $('#recent');
+
+    // map
+    $("#selectCity").change(function () {
+        if ($(this).val() == 1) {
+            adres = 'Остаповский проезд 5, стр. 1, офис 801';
+            phone = '+7 (495) 589 39 32';
+            $(".mapAdres").html(adres);
+            $(".mapPhone").html(phone);
+            $(".mapCity").html('Контакты г. Москва');
+            $(".map").html('');
+            x = '55.722467';
+            y = '37.703299';
+            initMap(x, y, adres, phone, 'restart');
+        } else if ($(this).val() == 2) {
+            adres = 'ул. Смолячкова, д. 19, БЦ "ГАП", 2 этаж, офис 207';
+            phone = '+7 (812) 313 61 29';
+            $(".mapAdres").html(adres);
+            $(".mapPhone").html(phone);
+            $(".mapCity").html('Контакты г. Санкт-Петербург');
+            $(".map").html('');
+            x = '59.970853';
+            y = '30.346438';
+            initMap(x, y, adres, phone, 'restart');
+        } else if ($(this).val() == 3) {
+            adres = 'ул. Дружинников, д. 5б, офис 701';
+            phone = '+7 (473) 207 01 15';
+            $(".mapAdres").html(adres);
+            $(".mapPhone").html(phone);
+            $(".mapCity").html('Контакты г. Воронеж');
+            $(".map").html('');
+            x = '51.684658';
+            y = '39.174353';
+            initMap(x, y, adres, phone, 'restart');
+        } else if ($(this).val() == 4) {
+            adres = 'ул. Урицкого, д. 19, этаж 10, офис 4';
+            phone = '+7 (846) 273 42 71';
+            $(".mapAdres").html(adres);
+            $(".mapPhone").html(phone);
+            $(".mapCity").html('Контакты г. Самара');
+            $(".map").html('');
+            x = '53.188945';
+            y = '50.132083';
+            initMap(x, y, adres, phone, 'restart');
+        }
+    });
+
+    $("#vid, #sys-nal, #prav-form").change(function () {
+        vid_selected = "";
+        $('.sumo_vid .optWrapper li.selected label').each(function (i, elem) {
+            vid_selected = vid_selected + this.innerHTML + ",";
+        });
+        $("#input-vid-d").val(vid_selected);
+        //console.log(vid_selected);
+        //console.log($(".sumo_vid .CaptionCont span").innerHTML);
+
+        GetTarifNew()
+    });
+    // to top
+    win.scroll(function () {
+        if ($(this).scrollTop() > 200) {
+            $('#toTop').fadeIn(100);
+        } else {
+            $('#toTop').fadeOut(100);
+        }
+
+        if (winWidth > 1210) {
+            if (win.scrollTop() + winHeight > docHeight - 330) {
+                $('#toTop').css({
+                    'position': 'absolute',
+                    'bottom': '230px'
+                });
+            } else {
+                $('#toTop').css({
+                    'position': 'fixed',
+                    'bottom': '15px'
+                });
+            }
+        }
+    });
+    $('#toTop').click(function (e) {
+        e.preventDefault();
+        $('html, body').animate({scrollTop: 0});
+    });
+
+    var isMobile = {
+        Android: function () {
+            return navigator.userAgent.match(/Android/i);
+        },
+        BlackBerry: function () {
+            return navigator.userAgent.match(/BlackBerry/i);
+        },
+        iOS: function () {
+            return navigator.userAgent.match(/iPhone|iPad|iPod/i);
+        },
+        Opera: function () {
+            return navigator.userAgent.match(/Opera Mini/i);
+        },
+        Windows: function () {
+            return navigator.userAgent.match(/IEMobile/i);
+        },
+        any: function () {
+            return (isMobile.Android() || isMobile.BlackBerry() || isMobile.iOS() || isMobile.Opera() || isMobile.Windows());
+        }
+    };
+
+
+    // sidebar recent articles
+    if (!isMobile.any()) {
+        if (recent.length) {
+            var recentTop = recent.offset().top - 200,
+                    recentHeight = recent.height();
+
+            win.scroll(function () {
+                var limit = $('.footer').offset().top - recentHeight - 400;
+                var windowTop = win.scrollTop();
+                if (recentTop < windowTop) {
+                    recent.css({position: 'fixed', top: 200});
+                } else {
+                    recent.css('position', 'static');
+                }
+                if (limit < windowTop) {
+                    var diff = limit - windowTop + 200;
+                    recent.css({top: diff});
+                }
+            });
+        }
+    }
+
+
+    // search
+    if (winWidth < 991) {
+        $('#button').on('click', function (e) {
+            e.stopPropagation();
+            $(this).toggle();
+            $('#submit').toggle();
+            $('#search').animate({width: 'toggle'}).focus();
+            return false;
+        });
+        $('#search').click(function (e) {
+            e.stopPropagation();
+        });
+        $(document).click(function () {
+            $('#search').animate({width: "hide"});
+            $('#submit').fadeOut(function () {
+                $('#button').show();
+            });
+        });
+    } else {
+        $('#button').on('click', function (e) {
+            e.preventDefault();
+            $('#form').animate({height: 'toggle'}, 100);
+        });
+    }
+
+
+    if ($("#bx-panel").length) {
+        $(".body").addClass("is-panel");
+    }
+
+
+    // fancybox
+    $('.fancybox').fancybox({
+        'padding': 5,
+        'margin': 0,
+        'overlayOpacity': 0.9,
+        'hideOnOverlayClick': true,
+        'overlayColor': '#000',
+        'hideOnContentClick': false,
+        'loop': false,
+        'helpers': {
+            overlay: {
+                locked: false
+            }
+        }
+    });
+
+
+
+    if ($('select').length) {
+        // select
+        $('select').SumoSelect({
+            placeholder: '',
+            csvDispCount: 4
+        });
+    }
+
+
+    // reviews
+    $('.reviews').slick({
+        arrows: true,
+        dots: false,
+        fade: true,
+        adaptiveHeight: true
+    });
+
+
+    // slider
+    intro.slick({
+        arrows: false,
+        dots: true,
+        fade: true
+    });
+
+
+    // modal
+    $('.vopros').click(function (e) {
+        e.preventDefault();
+        Recaptchafree.reset();
+        $('#vopros').fadeIn(100);
+    });
+    $('.zapros').click(function (e) {
+        e.preventDefault();
+        Recaptchafree.reset();
+        $('#zapros').fadeIn(100);
+    });
+    $('.open-form').click(function (e) {
+        e.preventDefault();
+        $(this).fadeOut(100, function () {
+            Recaptchafree.reset();
+            $('.form').fadeIn(100);
+        });
+    });
+
+    $('.profile').click(function(e) {
+
+        e.preventDefault();
+        $('#profile').fadeIn(100);
+
+
+        $(this).find('.team__pic img').clone().appendTo('#profile .content .img');
+        $(this).find('.team__text').clone().appendTo('#profile .content .name');
+    });
+
+    $('a.close').click(function (e) {
+        e.preventDefault();
+        $('.modal').modal('hide');
+        $('.modal-profile .content').find('.img').children().remove();
+        $('.modal-profile .content').find('.name').children().remove();        
+    });
+    $('.modal').on('click', '.close',function (e) {
+        e.preventDefault();
+        $('.modal').modal('hide');
+    });
+		
+		$(".js-href").on("click", function(e){
+			e.preventDefault();
+			var href = $(this).data("u");
+			window.open(window.atob(href), "_blank");
+		});
+
+
+    // mask
+    $('input[type="tel"]').mask('+7 (999) 999-99-99');
+
+
+    // footer
+    $('.show-other').click(function (e) {
+        e.preventDefault();
+        $(this).hide();
+        $('.other').fadeIn();
+    });
+
+
+    // calculator
+    function count() {
+        $('.range').each(function () {
+            var rangeLi = $(this).find('li'),
+                    rangeLiWidth = Math.ceil(480 / rangeLi.length),
+                    rangeWidth = 480 + rangeLiWidth;
+            $(this).find('ul').css({
+                'width': rangeWidth,
+                'margin-left': -Math.ceil(rangeLiWidth / 2)
+            });
+            rangeLi.css('width', rangeWidth / rangeLi.length);
+        });
+    }
+
+    if ($('#staff').length > 0) {
+        count();
+        var staff = document.getElementById('staff');
+
+        noUiSlider.create(staff, {
+            start: [0],
+            range: {
+                'min': [0],
+                '11%': [5],
+                '22%': [10],
+                '33%': [25],
+                '44%': [50],
+                '55%': [100],
+                '66%': [200],
+                '77%': [300],
+                '88%': [400],
+                'max': [501]
+            },
+            format: wNumb({decimals: 0})
+        });
+        var inputStaff = document.getElementById('input-staff');
+        staff.noUiSlider.on('update', function (values, handle) {
+
+            inputStaff.value = values[handle];
+
+            GetTarifNew();
+            if (inputStaff.value == "0") {
+                document.getElementById("mini_calc_result").innerHTML = '';
+                $("#btn_zapros").css("display", "none");
+            }
+        });
+        inputStaff.addEventListener('change', function () {
+            staff.noUiSlider.set(this.value);
+            GetTarifNew();
+
+        });
+        inputStaff.addEventListener("keyup", function () {
+            staff.noUiSlider.set(this.value);
+            GetTarifNew();
+        });
+    }
+
+    if ($('#docs').length > 0) {
+        count();
+        var docs = document.getElementById('docs');
+        noUiSlider.create(docs, {
+            start: [100],
+            range: {
+                'min': [100],
+                '9%': [110],
+                '18%': [120],
+                '27%': [130],
+                '36%': [140],
+                '45%': [150],
+                '54%': [160],
+                '63%': [170],
+                '72%': [180],
+                '81%': [190],
+                '90%': [200],
+                'max': [210]
+            },
+            format: wNumb({decimals: 0})
+        });
+        var inputDocs = document.getElementById('input-docs');
+        docs.noUiSlider.on('update', function (values, handle) {
+            inputDocs.value = values[handle];
+            GetTarifNew();
+
+        });
+        inputDocs.addEventListener('change', function () {
+            docs.noUiSlider.set(this.value);
+            GetTarifNew();
+        });
+        inputDocs.addEventListener("keyup", function () {
+            docs.noUiSlider.set(this.value);
+            GetTarifNew();
+        });
+    }
+
+    if ($('#operations').length > 0) {
+        count();
+        var operations = document.getElementById('operations');
+        noUiSlider.create(operations, {
+            start: [0],
+            range: {
+                'min': [0],
+                '12%': [5],
+                '25%': [15],
+                '37%': [25],
+                '50%': [50],
+                '62%': [75],
+                '75%': [100],
+                '87%': [125],
+                'max': [160]
+            },
+            format: wNumb({decimals: 0})
+        });
+        var inputoperations = document.getElementById('input-operations');
+        operations.noUiSlider.on('update', function (values, handle) {
+            inputoperations.value = values[handle];
+            GetTarifNew();
+
+        });
+        inputoperations.addEventListener('change', function () {
+            operations.noUiSlider.set(this.value);
+            GetTarifNew();
+        });
+        inputoperations.addEventListener("keyup", function () {
+            operations.noUiSlider.set(this.value);
+            GetTarifNew();
+        });
+    }
+
+
+    if ($('#payments').length > 0) {
+        count();
+        var payments = document.getElementById('payments');
+        noUiSlider.create(payments, {
+            start: [40],
+            range: {
+                'min': [40],
+                '10%': [45],
+                '20%': [50],
+                '30%': [55],
+                '40%': [60],
+                '50%': [65],
+                '60%': [70],
+                '70%': [75],
+                '80%': [80],
+                '90%': [90],
+                'max': [100]
+            },
+            format: wNumb({decimals: 0})
+        });
+        var inputPayments = document.getElementById('input-payments');
+        payments.noUiSlider.on('update', function (values, handle) {
+            inputPayments.value = values[handle];
+            GetTarifNew();
+        });
+        inputPayments.addEventListener('change', function () {
+            payments.noUiSlider.set(this.value);
+        });
+        inputPayments.addEventListener("keyup", function () {
+            payments.noUiSlider.set(this.value);
+            GetTarifNew();
+        });
+    }
+
+    if ($('#employees').length > 0) {
+        count();
+        var employees = document.getElementById('employees');
+        noUiSlider.create(employees, {
+            start: [5],
+            range: {
+                'min': [5],
+                '11%': [6],
+                '22%': [7],
+                '33%': [8],
+                '44%': [9],
+                '55%': [10],
+                '66%': [15],
+                '77%': [20],
+                '88%': [25],
+                'max': [30]
+            },
+            format: wNumb({decimals: 0})
+        });
+        var inputEmployees = document.getElementById('input-employees');
+        employees.noUiSlider.on('update', function (values, handle) {
+            inputEmployees.value = values[handle];
+            GetTarifNew();
+        });
+        inputEmployees.addEventListener('change', function () {
+            employees.noUiSlider.set(this.value);
+            GetTarifNew();
+        });
+        inputEmployees.addEventListener("keyup", function () {
+            employees.noUiSlider.set(this.value);
+            GetTarifNew();
+        });
+    }
+    // responsive tables
+    $('table').addClass('responsive').wrap('<div class="table-wrapper"><div class="scrollable"></div></div>');
+
+    if (winWidth < 1210) {
+        var service = $('.services-page li:not(.last) .item');
+        service.click(function (e) {
+            e.preventDefault();
+            service.not(this).next('.slide-down').slideUp(100);
+            $(this).next('.slide-down').slideToggle(100);
+        });
+    }
+
+    if($('.faq').length) {
+        faq();
+    }
+
+
+
+    /* Скрипт для страницы о компании */
+    if ($('.for-whom .squares').length) {
+        items = [];
+        $('.for-whom .squares li div img').each(function (i, item) {
+            //console.log(i);
+            //console.log(item);
+            items.push(item);
+            if (i > 3) {
+                //console.log($(item).parent('li'));
+                $(item).parent('li').remove();
+            }
+        })
+        puth_logo = [0, 3, 2, 1];
+        i = 0;
+        j = 4;
+        setInterval(function () {
+            number = puth_logo[i];
+            i++;
+            if (i > 3) {
+                i = 0;
+            }
+            $('.for-whom .squares li').eq(number).children('div').animate({opacity: 0}, 500)
+            setTimeout(function () {
+                $('.for-whom .squares li').eq(number).children('div').html(items[j])
+                $('.for-whom .squares li').eq(number).children('div').animate({opacity: 1}, 500)
+            }, 500);
+            j++;
+            if (j > 9) {
+                j = 0;
+            }
+        }, 2000)
+    }
+});
+
+function faq() {
+
+    var trigger = $('#faq_list');
+
+    trigger.on('click', '.faq-head', function(e) {
+        e.preventDefault();
+
+        $(this).toggleClass('active');
+        $(this).parents().siblings().find('.faq-head').removeClass('active');
+        $(this).next().slideToggle(350);
+        $(this).parents().siblings().find('.faq-content').slideUp(350);
+    });
+}
+
+if ($('#calc-sidebar').length) {
+    var isMobile = {
+        Android: function () {
+            return navigator.userAgent.match(/Android/i);
+        },
+        BlackBerry: function () {
+            return navigator.userAgent.match(/BlackBerry/i);
+        },
+        iOS: function () {
+            return navigator.userAgent.match(/iPhone|iPad|iPod/i);
+        },
+        Opera: function () {
+            return navigator.userAgent.match(/Opera Mini/i);
+        },
+        Windows: function () {
+            return navigator.userAgent.match(/IEMobile/i);
+        },
+        any: function () {
+            return (isMobile.Android() || isMobile.BlackBerry() || isMobile.iOS() || isMobile.Opera() || isMobile.Windows());
+        }
+    };
+
+    function funcScrollBar() {
+        var scrollTop = $(window).scrollTop();
+        var pos = scrollTop - parseInt($('.calculator .block').offset().top) + $('.header').height() + $('.nav').height() + 40;
+
+        if ((pos) < 0) {
+            pos = 0;
+        }
+        if ((pos) > ($('.calculator .block').outerHeight() - $('#calc-sidebar').height())) {
+            pos = $('.calculator .block').outerHeight() - $('#calc-sidebar').height();
+        }
+
+        if (isMobile.any()) {
+            pos = 0;
+        }
+
+        $('#calc-sidebar').css('margin-top', pos + 'px');
+
+
+        $('#btn_zapros').on('click', function (e) {
+            e.preventDefault();
+
+            if((pos) < (($('.calculator .block').outerHeight()/2))) {
+                $('#calc-sidebar').css('margin-top', 0);
+            } else {
+                $('#calc-sidebar').css('margin-top', pos - $('#send-calc').height());
+            }
+        });
+    }
+
+    funcScrollBar();
+
+    $(window).scroll(function () {
+        funcScrollBar();
+    });
+
+}
+
+
+// carousel
+$(window).load(function () {
+    if ($(window).width() > 1210) {
+        /*
+        $("#carousel").mCustomScrollbar({
+            axis: "x",
+            theme: "rounded-dots-dark",
+            advanced: {autoExpandHorizontalScroll: true},
+            mouseWheel: false,
+            documentTouchScroll: true
+        });/**/
+    } else {
+        $('#carousel').slick({
+            dots: true,
+            fade: true
+        });
+    }
+});
+
+// equal heights
+equalheight = function (container) {
+    var currentTallest = 0,
+            currentRowStart = 0,
+            rowDivs = new Array(),
+            $sidebar;
+    $(container).each(function () {
+
+        $sidebar = $(this);
+        $($sidebar).height('auto');
+        topPostion = $sidebar.position().top;
+
+        if (currentRowStart != topPostion) {
+            for (currentDiv = 0; currentDiv < rowDivs.length; currentDiv++) {
+                rowDivs[currentDiv].height(currentTallest);
+            }
+            rowDivs.length = 0; // empty the array
+            currentRowStart = topPostion;
+            currentTallest = $sidebar.height();
+            rowDivs.push($sidebar);
+        } else {
+            rowDivs.push($sidebar);
+            currentTallest = (currentTallest < $sidebar.height()) ? ($sidebar.height()) : (currentTallest);
+        }
+        for (currentDiv = 0; currentDiv < rowDivs.length; currentDiv++) {
+            rowDivs[currentDiv].height(currentTallest);
+        }
+    });
+};
+
+$(window).load(function () {
+    equalheight('.why-we .block ');
+});
+
+$(window).resize(function () {
+    equalheight('.why-we .block ');
+});
+
+$('.minus').click(function () {
+    var val = eval($(this).next('input').val());
+    if (val > 1) {
+        $(this).next('input').val(val - 1);
+        GetTarifNew();
+    } else {
+        $(this).next('input').val(0);
+    }
+    result=0;
+    $(this).parents('form').children('input').each(function(i,item){
+        result+=$(this).parents('form').find('input[type="text"]').eq(i).val()*1;
+    })
+    console.log(result);
+    if(result == 0 ){
+        document.getElementById("calc_result").innerHTML = '';
+        $("#btn_zapros").css("display", "none");
+    }
+    return false;
+});
+$('.plus').click(function () {
+    var val = eval($(this).prev('input').val());
+    $(this).prev('input').val(val + 1);
+    GetTarifNew();
+    console.log(val + 1);
+    return false;
+});
+
+function AjaxFormRequest(result_id, form_id)
+{
+
+    $('#' + form_id + ' input').each(function (i, elem) {
+        if (this.getAttribute('data-required') == 'Y' && this.value == "")
+            $(this).addClass("error");
+        else
+            $(this).removeClass("error");
+    });
+
+    if (form_id == 'mini_calc_form') {
+        document.getElementById("sum_mini").value = document.getElementById("precost").innerHTML;
+    }
+
+    jQuery.ajax({
+        url: '/bitrix/ajax/request.php', //Адрес подгружаемой страницы
+        type: "POST", //Тип запроса
+        dataType: "html", //Тип данных
+        data: jQuery("#" + form_id).serialize(),
+        success: function (response) { //Если все нормально
+            var resp = JSON.parse(response);
+            console.log(resp);
+
+            if(resp.result){
+                $('.modal').modal('hide');
+                modal_thx(form_id);
+            }else{
+                $('#'+result_id).html('<p style="color: red;">'+resp.message+'</p>')
+                setTimeout(function(){
+                    $('#top_form_result').html('');
+                    $('#sotr_form_result').html('');
+                }, 4000);
+            }
+        },
+        error: function (response) { //Если ошибка
+            document.getElementById(result_id).innerHTML = "Ошибка при отправке формы";
+        }
+    });
+}
+
+function AjaxFormQuest(result_id, form_id)
+{
+
+    $('#' + form_id + ' input').each(function (i, elem) {
+        if (this.getAttribute('data-required') == 'Y' && this.value == "")
+            $(this).addClass("error");
+        else
+            $(this).removeClass("error");
+    });
+    $('#' + form_id + ' textarea').each(function (i, elem) {
+        if (this.getAttribute('data-required') == 'Y' && this.value == "")
+            $(this).addClass("error");
+        else
+            $(this).removeClass("error");
+    });
+    $('#' + form_id + ' select').each(function (i, elem) {
+
+        if (this.getAttribute('data-required') == 'Y' && this.value == "")
+            $(this).addClass("error");
+        else
+            $(this).removeClass("error");
+    });    
+    jQuery.ajax({
+        url: '/bitrix/ajax/vopros.php', //Адрес подгружаемой страницы
+        type: "POST", //Тип запроса
+        dataType: "html", //Тип данных
+        data: jQuery("#" + form_id).serialize(),
+        success: function (response) { //Если все нормально
+            var resp = JSON.parse(response);
+            console.log(resp);
+
+            if(resp.result){
+                $('.modal').modal('hide');
+                modal_thx(form_id);
+            }else{
+                $('#'+result_id).html('<p style="color: red;">'+resp.message+'</p>')
+            }
+        },
+        error: function (response) { //Если ошибка
+            document.getElementById(result_id).innerHTML = "Ошибка при отправке формы";
+        }
+    });
+}
+
+function AjaxFormRequestSubs(result_id, form_id)
+{
+
+    jQuery.ajax({
+        url: '/bitrix/ajax/subscribe.php', //Адрес подгружаемой страницы
+        type: "POST", //Тип запроса
+        dataType: "html", //Тип данных
+        data: jQuery("#" + form_id).serialize(),
+        success: function (response) { //Если все нормально
+            var resp = JSON.parse(response);
+            if(resp.result){
+                $('.modal').modal('hide');
+                if(form_id == 'big_subscribe_top_form' || form_id == 'subscribe_top_form'){
+                    modal_thx2(form_id);
+                }else{
+                    modal_thx(form_id);
+                }
+            }else{
+                console.log(resp);
+                $('#'+result_id).html('<p style="color: red;">'+resp.message+'</p>')
+                setTimeout(function(){
+                    $('#top_form_result').html('');
+                    $('#sotr_form_result').html('');
+                    $('#'+result_id).html('')
+                }, 4000);
+            }
+        },
+        error: function (response) { //Если ошибка
+            document.getElementById(result_id).innerHTML = "Ошибка при отправке формы";
+        }
+    });
+}
+
+function modal_thx() {
+    $('#modal_thx').modal('show');
+    setTimeout(function () {
+        $('.modal').modal('hide');
+    }, 4000)
+}
+function modal_thx2() {
+    $('#modal_thx2').modal('show');
+    setTimeout(function () {
+        $('.modal').modal('hide');
+    }, 4000)
+}
+function AjaxFormRequestCalc()
+{
+
+    $('#send-calc input').each(function (i, elem) {
+        if (this.getAttribute('data-required') == 'Y' && this.value == "")
+            $(this).addClass("error");
+        else
+            $(this).removeClass("error");
+    });
+
+    tarif = document.getElementById("tariff").innerHTML;
+    precost = document.getElementById("precost").innerHTML;
+
+    jQuery.ajax({
+        url: '/bitrix/ajax/request_calc.php', //Адрес подгружаемой страницы
+        type: "POST", //Тип запроса
+        dataType: "html", //Тип данных
+        data: {fm1: $("#calc_form").serialize(), fm2: $("#send-calc").serialize(), TARIF: tarif, SUM: precost},
+        success: function (response) { //Если все нормально
+            if(resp.result){
+                $('.modal').modal('hide');
+                modal_thx(form_id);
+            }else{
+                $('#'+result_id).html('<p style="color: red;">'+resp.message+'</p>')
+                setTimeout(function(){
+                    $('#top_form_result').html('');
+                    $('#sotr_form_result').html('');
+                }, 4000);
+            }
+
+        },
+        error: function (response) { //Если ошибка
+            document.getElementById("send-calc-result").innerHTML = "Ошибка при отправке формы";
+        }
+    });
+}
+
+function select_fix() {
+    var option = $('select option[disabled]'),
+        select = option.parents('select');
+    select.on('click', function() {
+        option.remove();
+    });
+}
+select_fix();
+
+function onClick(e, form) {
+	if (!e.getElementsByClassName('g-recaptcha').length) {
+		const div = document.createElement("div");
+		div.innerHTML = '<div id="recaptchaUI' + form + '" class="g-recaptcha"></div>'
+		e.appendChild(div);
+	}
+}
+
+function carousel() {
+    var carousel = {};
+    //console.log(carousel);
+
+    $("#carousel").each(function(i) {
+        var _this = $(this),
+            _result = [],
+            items = _this.find(".carousel-item"),
+            years = {},
+            length = $(".carousel-item").length,
+            wrapper = $("<div class='carousel-wrapper' />");
+
+        items.each(function(i, el) {
+            var y = $(this).data("year")
+            if(years[y]){
+                years[y]++;
+            }else{
+                years[y] = 1
+            };
+        });
+
+        // carouselArray.sort(function (a, b) {
+        //     return b - a;
+        // });
+        console.log(years)
+
+
+        /* generate year point  */
+        Object.keys(years).sort(function (a,b) {return b - a;}).forEach(function (e) {
+            $("<li>", {text: e}).appendTo(".scale.range ul");
+        });
+
+
+        items.wrapAll(wrapper);
+        wrapper = _this.find('.carousel-wrapper');
+        wrapper.css({
+            position: "absolute",
+            overflow: "hidden",
+            transition: "0.2s linear",
+            width: (items.outerWidth() * length),
+            left: 0
+        });
+
+        $('.scale.range').each(function () {
+            var rangeLi = $(this).find('li'),
+                rangeLiWidth = Math.ceil(960 / rangeLi.length),
+                rangeWidth = 960 + rangeLiWidth;
+            $(this).find('ul').css({
+                'width': rangeWidth,
+                'marginLeft': (960-rangeWidth)/2
+            });
+            rangeLi.css('width', rangeWidth / rangeLi.length);
+        });
+
+
+        var scale = document.getElementById('scale');
+
+        noUiSlider.create(scale, {
+            range: {
+                min: 0,
+                max: 100
+            },
+            start: 0,
+            handles: 1
+        });
+
+
+        //rail width
+        var rw = wrapper.width() - _this.width();
+        //year length
+        var dates = Object.keys(years).sort(function (a,b) {return b - a;});
+        //date step
+        var ds = 100/(dates.length-1);
+        //item step
+        var is = 100/length;
+
+        //item width for step
+        var iw = rw/length;
+
+        var calculate_width = function (c) {
+            var r = 0;
+            for (var i = 0; i < c; i++){
+                r += years[dates[i]];
+            }
+            return r;
+        };
+        scale.noUiSlider.on('update', function (values) {
+            var cur = values[0]*1;
+            var step;
+            var cur_p = 0;
+            if(cur<1){
+                step=0;
+                cur_p = cur
+            }else if(cur>99){
+                step = dates.length - 1;
+                cur_p = 100
+            }else{
+                step = Math.ceil(cur/ds);
+                cur_p = ((cur-ds*(step-1))*100)/(ds*step)
+                console.log(cur_p)
+            };
+            var mn = years[dates[step]];
+            var shift = (calculate_width(step))*iw + mn*iw/100*cur_p;
+            wrapper.css({
+                left: -shift + 'px'
+            });
+        });
+    });
+
+
+    $('.mmau__slider').slick({
+        arrows: false,
+        dots: true,
+        infinite: true,
+        slidesToShow: 5,
+        slidesToScroll: 5
+    });
+}
+
+carousel();
+/* End */
+;; /* /bitrix/templates/nord/js/svg4everybody.js?16431159831396*/
+; /* /bitrix/templates/nord/js/validate.js?164311598312244*/
+; /* /bitrix/templates/nord/assets/js/script.js?16431159364761*/
+; /* /bitrix/templates/nord/js/scripts.js?171310897629934*/
